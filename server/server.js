@@ -4,38 +4,22 @@ const express = require('express')
 const app = express();
 const bodyParser = require('body-parser');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/shareme', { useNewUrlParser: true }, (err,res)=>{
+    if(err)
+        throw err;
+
+    console.log('BBDD Online');
+});
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
- 
+
 // parse application/json
-app.use(bodyParser.json())
- 
-app.get('/', function (req, res) {
-  res.send('Hello World')
-})
+app.use(bodyParser.json());
 
-app.get('/usuario', function (req, res) {
-    res.json('Hello usuario')
-  })
-
-  app.post('/usuario/:id', function (req, res) {
-    let id = req.params.id;
-    res.json({
-        id
-    })
-  })
-
-  app.post('/usuario/:id', function (req, res) {
-    let body = req.body;
-
-    res.json({
-        body
-    })
-  })
+app.use( require('./routes/usuario'));
 
 
-  app.post('/usuario', function (req, res) {
-    res.json('Hello usuario')
-  })
- 
-app.listen(3000)
+
+app.listen(process.env.PORT)
